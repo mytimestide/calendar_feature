@@ -5,14 +5,17 @@
     "plugin:react-hooks/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
+    "plugin:prettier/recommended",
+    "prettier"
   ],
   "plugins": [
+    "@typescript-eslint",
     "react",
     "react-hooks",
     "prettier"
   ],
   "rules": {
+    "prettier/prettier": 1,
     "no-unused-vars": "off",
     "no-cond-assign": "error",
     "no-debugger": "warn",
@@ -27,7 +30,6 @@
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/no-explicit-any": "off",
-    "prettier/prettier": "warn"
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }

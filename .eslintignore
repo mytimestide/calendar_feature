@@ -1,0 +1,7 @@
+/scripts/*
+.history
+.idea
+serviceWorker.ts
+/config/*
+/public/*
+/node_modules/*

@@ -2,6 +2,7 @@ import React from "react";
 import Loadable from "react-loadable";
 import Loading from "@/components/Loading";
 import { Menu } from "@/models/index.type";
+
 export interface IFMenu extends Menu {
   children?: IFMenu[];
   component?: any;

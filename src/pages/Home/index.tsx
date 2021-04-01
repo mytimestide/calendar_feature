@@ -20,6 +20,7 @@ import {
   storeState,
 } from "@/store/fullCalendar.slice";
 import { useDispatch, useSelector } from "react-redux";
+import "./index.less";
 
 export default function HomePageContainer(props: any): JSX.Element {
   const storeData = useSelector(storeState);
@@ -68,6 +69,13 @@ export default function HomePageContainer(props: any): JSX.Element {
     calendarApi.unselect(); // clear date selection
 
     if (title) {
+      console.log({
+        // will render immediately. will call handleEventAdd
+        title,
+        start: selectInfo.startStr,
+        end: selectInfo.endStr,
+        allDay: selectInfo.allDay,
+      });
       calendarApi.addEvent(
         {
           // will render immediately. will call handleEventAdd
@@ -82,6 +90,7 @@ export default function HomePageContainer(props: any): JSX.Element {
   };
 
   const handleEventClick = (clickInfo: any) => {
+    console.log(clickInfo);
     if (
       confirm(
         `Are you sure you want to delete the event '${clickInfo.event.title}'`
@@ -132,8 +141,17 @@ export default function HomePageContainer(props: any): JSX.Element {
             center: "title",
             right: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
+          // eventOverlap={()=>true}
+          businessHours={{
+            // days of week. an array of zero-based day of week integers (0=Sunday)
+            daysOfWeek: [0, 1, 2, 3, 4, 5, 6], // Monday - Thursday
+
+            startTime: "10:00", // a start time (10am in this example)
+            endTime: "18:00", // an end time (6pm in this example)
+          }}
           initialView="dayGridMonth"
-          editable={true}
+          locale={"cn"}
+          editable={false}
           selectable={true}
           selectMirror={true}
           dayMaxEvents={true}
@@ -142,7 +160,7 @@ export default function HomePageContainer(props: any): JSX.Element {
           select={handleDateSelect}
           events={events}
           eventContent={renderEventContent} // custom render function
-          eventClick={handleEventClick}
+          // eventClick={handleEventClick}
           eventAdd={handleEventAdd}
           eventChange={handleEventChange} // called for drag-n-drop/resize
           eventRemove={handleEventRemove}

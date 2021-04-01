@@ -1,5 +1,6 @@
 import { formatDate } from "@fullcalendar/react";
 import React from "react";
+
 interface plainEventObjectProps {
   id: number;
   start: string;
@@ -27,6 +28,8 @@ export function renderEventContent(eventInfo: any) {
   return (
     <>
       <b>{eventInfo.timeText}</b>
+      <br />
+      <br />
       <i>{eventInfo.event.title}</i>
     </>
   );
