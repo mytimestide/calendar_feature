@@ -13,7 +13,7 @@ const devOptions = require("./config/proxy");
 const webpackConfig = require("./config/webpack.dev.config.js"); // webpack开发环境的配置文件
 
 const app = express(); // 实例化express服务
-let PORT = 2288; // 服务启动端口号
+let PORT = 2277; // 服务启动端口号
 
 // 跨域设置 需要跨域请打开注释,自己设置对应的域名
 app.use("/api", createProxyMiddleware(devOptions));

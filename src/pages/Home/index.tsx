@@ -1,6 +1,6 @@
 /* 主页 */
 
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
@@ -20,7 +20,10 @@ import {
   storeState,
 } from "@/store/fullCalendar.slice";
 import { useDispatch, useSelector } from "react-redux";
+import { Modal, message } from "antd";
+const { confirm } = Modal;
 import "./index.less";
+import dayjs from "dayjs";
 
 export default function HomePageContainer(props: any): JSX.Element {
   const storeData = useSelector(storeState);
@@ -34,25 +37,6 @@ export default function HomePageContainer(props: any): JSX.Element {
     return (
       <div className="demo-app-sidebar">
         <div className="demo-app-sidebar-section">
-          <h2>Instructions</h2>
-          <ul>
-            <li>Select dates and you will be prompted to create a new event</li>
-            <li>Drag, drop, and resize events</li>
-            <li>Click an event to delete it</li>
-          </ul>
-        </div>
-        <div className="demo-app-sidebar-section">
-          <label>
-            <input
-              type="checkbox"
-              checked={weekendsVisible}
-              onChange={toggleWeekends}
-            ></input>
-            toggle weekends
-          </label>
-        </div>
-        <div className="demo-app-sidebar-section">
-          <h2>All Events ({events?.length || 0})</h2>
           <ul>{(events || []).map(renderSidebarEvent)}</ul>
         </div>
       </div>
@@ -64,40 +48,42 @@ export default function HomePageContainer(props: any): JSX.Element {
 
   const handleDateSelect = (selectInfo: any) => {
     const calendarApi = selectInfo.view.calendar;
-    const title = prompt("Please enter a new title for your event");
-
-    calendarApi.unselect(); // clear date selection
-
-    if (title) {
-      console.log({
-        // will render immediately. will call handleEventAdd
-        title,
-        start: selectInfo.startStr,
-        end: selectInfo.endStr,
-        allDay: selectInfo.allDay,
-      });
-      calendarApi.addEvent(
-        {
-          // will render immediately. will call handleEventAdd
-          title,
-          start: selectInfo.startStr,
-          end: selectInfo.endStr,
-          allDay: selectInfo.allDay,
-        },
-        true
-      ); // temporary=true, will get overwritten when reducer gives new events
+    if (selectInfo.start.getDate() != selectInfo.end.getDate()) {
+      message.warning("中间有不可预约时间段，请重新选择");
+      calendarApi.unselect();
+      return;
     }
-  };
-
-  const handleEventClick = (clickInfo: any) => {
-    console.log(clickInfo);
-    if (
-      confirm(
-        `Are you sure you want to delete the event '${clickInfo.event.title}'`
-      )
-    ) {
-      clickInfo.event.remove(); // will render immediately. will call handleEventRemove
+    if (selectInfo.start.getHours() < 9 || selectInfo.end.getHours() > 20) {
+      message.warning("9点-20点为不可预约时间段，请重新选择");
+      calendarApi.unselect();
+      return;
     }
+    // const title = prompt("Please enter a new title for your event");
+    confirm({
+      title: "确认预约",
+      icon: null,
+      content: `是否预约${dayjs(selectInfo.startStr).format(
+        "YYYY-MM-DD HH:mm"
+      )}~${dayjs(selectInfo.endStr).format("YYYY-MM-DD HH:mm")}时间段`,
+      okText: "确认",
+      cancelText: "取消",
+      onOk() {
+        calendarApi.unselect();
+        calendarApi.addEvent(
+          {
+            // will render immediately. will call handleEventAdd
+            title: "预约",
+            start: selectInfo.startStr,
+            end: selectInfo.endStr,
+            allDay: selectInfo.allDay,
+          },
+          true
+        );
+      },
+      onCancel() {
+        calendarApi.unselect();
+      },
+    });
   };
 
   // handlers that initiate reads/writes via the 'action' props
@@ -145,12 +131,11 @@ export default function HomePageContainer(props: any): JSX.Element {
           businessHours={{
             // days of week. an array of zero-based day of week integers (0=Sunday)
             daysOfWeek: [0, 1, 2, 3, 4, 5, 6], // Monday - Thursday
-
             startTime: "10:00", // a start time (10am in this example)
             endTime: "18:00", // an end time (6pm in this example)
           }}
           initialView="dayGridMonth"
-          locale={"cn"}
+          locale={"zh"}
           editable={false}
           selectable={true}
           selectMirror={true}
