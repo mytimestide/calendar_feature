@@ -39,15 +39,7 @@ function RouterCom(props: any): JSX.Element {
 
   /** 跳转到某个路由之前触发 **/
   const onEnter = useCallback((Component, props) => {
-    /**
-     *  有用户信息，说明已登录
-     *  没有，则跳转至登录页
-     * **/
-    const userinfo = sessionStorage.getItem("userinfo");
-    if (userinfo) {
-      return <Component {...props} />;
-    }
-    return <Redirect to="/user/login" />;
+    return <Component {...props} />;
   }, []);
 
   return (
