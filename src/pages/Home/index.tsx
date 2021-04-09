@@ -20,15 +20,16 @@ import {
   storeState,
 } from "@/store/fullCalendar.slice";
 import { useDispatch, useSelector } from "react-redux";
-import { Modal, message } from "antd";
+import { Modal, message, Button } from "antd";
 const { confirm } = Modal;
 import "./index.less";
 import dayjs from "dayjs";
+import AddEvent from "./components/addEvent";
 
 export default function HomePageContainer(props: any): JSX.Element {
   const storeData = useSelector(storeState);
-  console.log(storeData);
   const { weekendsVisible, events } = storeData;
+  const [addVisible, setAddVisible] = useState(false);
   const dispatch: (
     ...args: unknown[]
   ) => Promise<calendarState> = useDispatch();
@@ -127,9 +128,7 @@ export default function HomePageContainer(props: any): JSX.Element {
             center: "title",
             right: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
-          // eventOverlap={()=>true}
           businessHours={{
-            // days of week. an array of zero-based day of week integers (0=Sunday)
             daysOfWeek: [0, 1, 2, 3, 4, 5, 6], // Monday - Thursday
             startTime: "10:00", // a start time (10am in this example)
             endTime: "18:00", // an end time (6pm in this example)
@@ -151,6 +150,16 @@ export default function HomePageContainer(props: any): JSX.Element {
           eventRemove={handleEventRemove}
         />
       </div>
+      <div className="rowBtn">
+        <Button
+          type="primary"
+          className="leaseBtn"
+          onClick={() => setAddVisible(true)}
+        >
+          添加预约
+        </Button>
+      </div>
+      {addVisible && <AddEvent onCancel={() => setAddVisible(false)} />}
     </div>
   );
 }

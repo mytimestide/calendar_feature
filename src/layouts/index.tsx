@@ -10,11 +10,6 @@ import { createBrowserHistory as createHistory } from "history"; // 锚点模式
 import { message } from "antd";
 
 // ==================
-// 自定义的东西
-// ==================
-import tools from "@/utils/tools";
-
-// ==================
 // 组件
 // ==================
 import BasicLayout from "@/layouts/BasicLayout";

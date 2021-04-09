@@ -29,7 +29,6 @@ export function renderEventContent(eventInfo: any) {
     <>
       <b>{eventInfo.timeText}</b>
       <br />
-      <br />
       <i>{eventInfo.event.title}</i>
     </>
   );

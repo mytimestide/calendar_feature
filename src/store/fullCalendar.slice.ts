@@ -29,8 +29,12 @@ export const calendarSlice = createSlice({
     toggleWeekends(state, action) {
       state.weekendsVisible = !state.weekendsVisible;
     },
+    eventUpdate(state, action) {
+      state.events = [...state.events, action.payload];
+    },
     upToView(state, action) {
-      state = { ...state, ...action };
+      console.log(state.events);
+      // state.events = [{end: "2021-04-07T08:00:00+08:00", start: "2021-04-06T05:00:00+08:00", title: "预约",id:1}]
     },
   },
   extraReducers: (builder) => {
@@ -57,7 +61,7 @@ export const calendarSlice = createSlice({
   },
 });
 
-export const { upToView, toggleWeekends } = calendarSlice.actions;
+export const { upToView, toggleWeekends, eventUpdate } = calendarSlice.actions;
 export const storeState = (state: RootState) => state.calendar;
 
 export const requestEvents = (startStr: string, endStr: string) => (
@@ -69,14 +73,7 @@ export const requestEvents = (startStr: string, endStr: string) => (
 
 export const createEvent = (plainEventObject: any) => (dispatch: AppDispatch) =>
   requestEventCreate(plainEventObject).then((newEventId) =>
-    dispatch(
-      upToView({
-        plainEventObjects: {
-          id: newEventId,
-          ...plainEventObject,
-        },
-      })
-    )
+    dispatch(eventUpdate({ id: newEventId, ...plainEventObject }))
   );
 export const updateEvent = (plainEventObject: any) => (dispatch: AppDispatch) =>
   requestEventUpdate(plainEventObject).then(() =>
