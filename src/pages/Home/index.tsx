@@ -12,7 +12,6 @@ import {
 import { reportNetworkError } from "./components/utils";
 import {
   calendarState,
-  toggleWeekends,
   requestEvents,
   createEvent,
   updateEvent,
@@ -129,9 +128,9 @@ export default function HomePageContainer(props: any): JSX.Element {
             right: "dayGridMonth,timeGridWeek,timeGridDay",
           }}
           businessHours={{
-            daysOfWeek: [0, 1, 2, 3, 4, 5, 6], // Monday - Thursday
-            startTime: "10:00", // a start time (10am in this example)
-            endTime: "18:00", // an end time (6pm in this example)
+            daysOfWeek: [0, 1, 2, 3, 4, 5, 6], // 每周工作日
+            startTime: "10:00", // 每日开始时间
+            endTime: "18:00", // 每日结束时间
           }}
           initialView="dayGridMonth"
           locale={"zh"}
