@@ -32,6 +32,11 @@ export const calendarSlice = createSlice({
     eventUpdate(state, action) {
       state.events = [...state.events, action.payload];
     },
+    eventDelete(state, action) {
+      const tempEvent = [...state.events];
+      tempEvent.splice(action.payload, 1);
+      state.events = [...tempEvent];
+    },
     upToView(state, action) {
       console.log(state.events);
       // state.events = [{end: "2021-04-07T08:00:00+08:00", start: "2021-04-06T05:00:00+08:00", title: "预约",id:1}]
@@ -61,7 +66,7 @@ export const calendarSlice = createSlice({
   },
 });
 
-export const { upToView, toggleWeekends, eventUpdate } = calendarSlice.actions;
+export const { upToView, eventDelete, eventUpdate } = calendarSlice.actions;
 export const storeState = (state: RootState) => state.calendar;
 
 export const requestEvents = (startStr: string, endStr: string) => (
@@ -81,3 +86,10 @@ export const updateEvent = (plainEventObject: any) => (dispatch: AppDispatch) =>
   );
 export const deleteEvent = (eventId: number) => (dispatch: AppDispatch) =>
   requestEventDelete(eventId).then(() => dispatch(upToView(eventId)));
+
+export const deleteEventByIndex = (eventIindex: number) => (
+  dispatch: AppDispatch
+) =>
+  requestEventDelete(eventIindex).then(() =>
+    dispatch(eventDelete(eventIindex))
+  );

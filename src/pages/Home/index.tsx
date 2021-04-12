@@ -16,10 +16,11 @@ import {
   createEvent,
   updateEvent,
   deleteEvent,
+  deleteEventByIndex,
   storeState,
 } from "@/store/fullCalendar.slice";
 import { useDispatch, useSelector } from "react-redux";
-import { Modal, message, Button } from "antd";
+import { Modal, message, Button, Table } from "antd";
 const { confirm } = Modal;
 import "./index.less";
 import dayjs from "dayjs";
@@ -116,6 +117,44 @@ export default function HomePageContainer(props: any): JSX.Element {
     });
   };
 
+  //处理表格中删除
+  const handleTableEventRemove = (index: any) => {
+    dispatch(deleteEventByIndex(index)).catch(() => {
+      reportNetworkError();
+    });
+  };
+
+  //表格渲染列
+  const columns = [
+    {
+      title: "开始时间",
+      dataIndex: "start",
+      key: "start",
+      render: (text: string) => dayjs(text).format("YYYY-MM-DD HH:mm"),
+    },
+    {
+      title: "结束时间",
+      dataIndex: "end",
+      key: "end",
+      render: (text: string) => dayjs(text).format("YYYY-MM-DD HH:mm"),
+    },
+    {
+      title: "操作",
+      dataIndex: "id",
+      key: "id",
+      render: (text: string, row: any, index: number) => (
+        <Button
+          size="small"
+          type="primary"
+          danger
+          onClick={() => handleTableEventRemove(index)}
+        >
+          删除
+        </Button>
+      ),
+    },
+  ];
+  console.log(events);
   return (
     <div className="demo-app">
       {renderSidebar()}
@@ -150,6 +189,7 @@ export default function HomePageContainer(props: any): JSX.Element {
         />
       </div>
       <div className="rowBtn">
+        <span>预约记录</span>
         <Button
           type="primary"
           className="leaseBtn"
@@ -158,6 +198,7 @@ export default function HomePageContainer(props: any): JSX.Element {
           添加预约
         </Button>
       </div>
+      <Table dataSource={events} columns={columns} rowKey="id" />
       {addVisible && <AddEvent onCancel={() => setAddVisible(false)} />}
     </div>
   );
